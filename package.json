@@ -5,8 +5,13 @@
   "license": "AGPL-3.0-only",
   "description": "A local Game Boy, Game Boy Color and Game Boy Advance browser player",
   "scripts": {
-    "start": "python3 server.py",
+    "start": "npm run build && python3 server.py",
     "dev": "npm start",
-    "test": "python3 -m unittest discover -s tests"
+    "test": "npm run typecheck && python3 -m unittest discover -s tests",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
   }
 }

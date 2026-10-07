@@ -2,6 +2,7 @@
 """Build a source offer and a credential-free directory for Railway uploads."""
 from pathlib import Path
 import shutil
+import subprocess
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -11,8 +12,9 @@ RELEASE = ROOT / 'work/release'
 
 
 def build():
+    subprocess.run(['npm', 'run', 'build'], cwd=ROOT, check=True)
     files = [ROOT / name for name in (
-        'README.md', 'LICENSE', 'package.json', 'server.py', 'Dockerfile',
+        'README.md', 'LICENSE', 'package.json', 'package-lock.json', 'tsconfig.json', 'server.py', 'Dockerfile',
         '.gitignore', '.gitattributes', '.dockerignore', '.railwayignore',
     )]
     for pattern in ('*.html', '*.js', '*.css', '*.svg', 'preview.png'):
@@ -21,6 +23,7 @@ def build():
     files.extend((ROOT / 'tools/delta-skin').glob('*'))
     files.extend((ROOT / 'tools').glob('*.py'))
     files.extend((ROOT / 'tests').glob('*.py'))
+    files.extend((ROOT / 'src').glob('*.ts'))
     files.append(PUBLIC / 'licenses/delta.txt')
     with zipfile.ZipFile(SOURCE, 'w', zipfile.ZIP_DEFLATED) as archive:
         for path in sorted(set(files)):

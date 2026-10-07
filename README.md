@@ -8,15 +8,16 @@ EmulatorJS 4.2.3 and its cores load from the official versioned CDN. Internet ac
 
 ## Run locally
 
-Use Python 3.11 or newer. Node.js is optional. You do not need to install npm packages.
+Use Python 3.11 or newer and Node.js 22 or newer. Install the TypeScript build dependency with `npm ci`.
 
 ```sh
 git clone https://github.com/musubipapi/tweetboy-open-source.git
 cd tweetboy-open-source
-python3 server.py
+npm ci
+npm start
 ```
 
-Open [localhost:8765](http://127.0.0.1:8765/). `npm start` runs the same server.
+Open [localhost:8765](http://127.0.0.1:8765/). `npm start` compiles TypeScript and starts the Python server. After a successful build, `python3 server.py` starts the server without compiling again.
 
 On first load, select **Choose a cartridge → Your ROM**. Select a `.gb`, `.gbc`, or `.gba` file of up to 32 MiB. No games are preloaded. After you import a cartridge, Tweetboy can restore it on your next visit.
 
@@ -120,24 +121,28 @@ No deployment includes bundled ROMs. `--detach` confirms the upload. It does not
 ## Development and checks
 
 ```sh
-python3 -m unittest discover -s tests
-node --check public/app.js
-node --check public/player.js
+npm run build
+npm test
 ```
 
-`npm test` runs the Python tests. Tests use a temporary public directory and real HTTP requests. They require no commercial ROMs or external services. They cover homepage startup, card routes, metadata, HEAD requests, framing headers, origin validation, and private-file restrictions.
+`npm test` checks TypeScript types and runs the Python tests. `npm run typecheck` checks types without generating JavaScript. Tests use a temporary public directory and real HTTP requests. They require no commercial ROMs or external services. They cover homepage startup, card routes, metadata, HEAD requests, framing headers, origin validation, and private-file restrictions.
 
 For browser checks, open `/embed-preview.html`. Check game startup, touch input, keyboard input, sound permission, pause, resume, and cartridge changes. Check automatic save restoration, saved color preferences, and storage failure messages.
 
 | File | Responsibility |
 | --- | --- |
-| `public/app.js` | Console UI, input, ROM library, settings, lifecycle |
-| `public/player.js` | Emulator configuration, snapshots, engine messages |
+| `src/app.ts` | Console UI, input, ROM library, settings, lifecycle |
+| `src/player.ts` | Emulator configuration, snapshots, engine messages |
+| `src/types.ts` | Cartridge, snapshot, and message types |
+| `src/globals.d.ts` | EmulatorJS and browser compatibility declarations |
+| `public/app.js`, `public/player.js`, `public/types.js` | Generated browser JavaScript |
 | `public/style.css` | Handheld skin and menu |
 | `server.py` | Static delivery, share metadata, framing policy |
 | `tools/build-release.py` | Source offer and deployable release directory |
 | `tools/delta-skin/` | Original controller artwork and rendering script |
 | `tests/test_server.py` | HTTP integration checks |
+
+Edit the files in `src/`. Run `npm run build` after each change. Do not edit the generated JavaScript directly. Generated files are committed so the static Docker image can start without Node.js. The release builder compiles TypeScript before creating the source archive. The compiler rejects known type errors before it generates output. Strict mode is not yet enabled for the full interface code.
 
 EmulatorJS 4.2.3 and Gambatte/mGBA load from `https://cdn.emulatorjs.org/4.2.3/data/`. This repository does not redistribute their code or binaries. Keep the fixed 59.7275 Hz scheduling and audio configuration unless measurements show a regression that requires a change. The CDN supplies third-party code separately from app code.
 
