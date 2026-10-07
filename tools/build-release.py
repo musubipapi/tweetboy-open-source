@@ -12,9 +12,9 @@ RELEASE = ROOT / 'work/release'
 
 
 def build():
-    subprocess.run(['npm', 'run', 'build'], cwd=ROOT, check=True)
+    subprocess.run(['bun', 'run', 'build'], cwd=ROOT, check=True)
     files = [ROOT / name for name in (
-        'README.md', 'THIRD_PARTY.md', 'LICENSE', 'package.json', 'package-lock.json', 'tsconfig.json', 'server.py', 'Dockerfile',
+        'README.md', 'THIRD_PARTY.md', 'LICENSE', 'package.json', 'bun.lock', 'tsconfig.json', 'server.py', 'Dockerfile',
         '.gitignore', '.gitattributes', '.dockerignore', '.railwayignore',
     )]
     for pattern in ('*.html', '*.js', '*.css', '*.svg', 'preview.png'):
@@ -24,6 +24,7 @@ def build():
     files.extend((ROOT / 'tools').glob('*.py'))
     files.extend((ROOT / 'tests').glob('*.py'))
     files.extend((ROOT / 'src').glob('*.ts'))
+    files.extend((ROOT / 'docs').glob('*'))
     files.append(PUBLIC / 'licenses/delta.txt')
     with zipfile.ZipFile(SOURCE, 'w', zipfile.ZIP_DEFLATED) as archive:
         for path in sorted(set(files)):

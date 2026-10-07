@@ -21,12 +21,19 @@ The Python server supplies files and generates Player Card metadata. The browser
 | `public/embed-preview.html` | Preview of the player at different sizes |
 | `server.py` | HTTP server, card metadata, and frame policy |
 | `tsconfig.json` | TypeScript compiler settings |
+| `bun.lock` | Exact build dependency versions |
+| `docs/architecture.png` | Architecture diagram exported from tldraw |
+| `docs/architecture.tldraw.json` | Editable tldraw document snapshot |
 | `tests/test_server.py` | HTTP integration tests |
 | `tools/build-release.py` | Build output, source archive, and release directory |
 | `tools/delta-skin/` | Controller source artwork and rendering script |
 | `tools/render-preview.py` | Preview image generator |
 
 ## How the player works
+
+![Tweetboy build, browser player, and storage architecture](docs/architecture.png)
+
+[Edit the diagram in tldraw](https://www.tldraw.com/f/jCtQhTKrypnwLxWObfP-S). The document snapshot is saved in `docs/architecture.tldraw.json`.
 
 1. The server returns the console page.
 2. `app.ts` reads the local cartridge library and settings.
@@ -104,16 +111,16 @@ Card metadata does not guarantee that X displays an interactive card. Audio perm
 
 ## Run and build
 
-Use Python 3.11 or newer and Node.js 22 or newer.
+Use Python 3.11 or newer and Bun 1.3.5 or newer.
 
 ```sh
-npm ci
-npm start
+bun install --frozen-lockfile
+bun run start
 ```
 
-Open [localhost:8765](http://127.0.0.1:8765/). `npm start` compiles TypeScript and starts the Python server.
+Open [localhost:8765](http://127.0.0.1:8765/). `bun run start` compiles TypeScript and starts the Python server.
 
-Edit files in `src/`. Run `npm run build` to generate JavaScript in `public/`. Do not edit the generated JavaScript directly. Generated files are committed so the Docker image can run without Node.js.
+Edit files in `src/`. Run `bun run build` to generate JavaScript in `public/`. Do not edit the generated JavaScript directly. Generated files are committed so the Docker image can run without Bun.
 
 The compiler does not generate output when type checks fail. Full strict mode is not enabled.
 
@@ -137,11 +144,11 @@ The server blocks dotfiles, directory listings, and links outside `public/`. The
 ## Checks and release files
 
 ```sh
-npm test
+bun run test
 python3 tools/build-release.py
 ```
 
-`npm test` checks TypeScript and runs seven HTTP integration tests. The tests use a temporary directory and require no ROMs or external services.
+`bun run test` checks TypeScript and runs seven HTTP integration tests. The tests use a temporary directory and require no ROMs or external services.
 
 The release builder compiles TypeScript, updates `public/licenses/tweetboy-source.zip`, and creates `work/release/`. The source archive includes the TypeScript files and build configuration. The release directory contains the server, Docker configuration, and browser files. It excludes ROMs and common credential files.
 
