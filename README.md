@@ -1,4 +1,4 @@
-![Tweetboy GBA handheld](docs/tweetboy-gba-hero.png)
+![Tweetboy vertical handheld](docs/tweetboy-gba-hero.png)
 
 # Tweetboy
 
