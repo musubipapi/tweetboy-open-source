@@ -14,7 +14,7 @@ RELEASE = ROOT / 'work/release'
 def build():
     subprocess.run(['npm', 'run', 'build'], cwd=ROOT, check=True)
     files = [ROOT / name for name in (
-        'README.md', 'LICENSE', 'package.json', 'package-lock.json', 'tsconfig.json', 'server.py', 'Dockerfile',
+        'README.md', 'THIRD_PARTY.md', 'LICENSE', 'package.json', 'package-lock.json', 'tsconfig.json', 'server.py', 'Dockerfile',
         '.gitignore', '.gitattributes', '.dockerignore', '.railwayignore',
     )]
     for pattern in ('*.html', '*.js', '*.css', '*.svg', 'preview.png'):
