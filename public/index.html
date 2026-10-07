@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<base href="/">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17151f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="description" content="Tweetboy — a pocket Game Boy, Game Boy Color and Game Boy Advance player that boots right in your feed.">
+<title>Tweetboy</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css?v=33">
+<script>document.documentElement.classList.toggle('embed',new URLSearchParams(location.search).get('embed')==='1'||location.pathname.startsWith('/play/')||window.top!==window)</script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <symbol id="i-sound-on" viewBox="0 0 16 16"><path d="M2 6h2.5L8 3v10L4.5 10H2z" fill="currentColor"/><path d="M10.5 5.5a3.5 3.5 0 0 1 0 5M12.4 3.6a6.2 6.2 0 0 1 0 8.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+ <symbol id="i-sound-off" viewBox="0 0 16 16"><path d="M2 6h2.5L8 3v10L4.5 10H2z" fill="currentColor"/><path d="M10.5 6l4 4m0-4l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+ <symbol id="i-pause" viewBox="0 0 16 16"><rect x="4" y="3" width="3" height="10" rx="1" fill="currentColor"/><rect x="9" y="3" width="3" height="10" rx="1" fill="currentColor"/></symbol>
+ <symbol id="i-play" viewBox="0 0 16 16"><path d="M5 3.2v9.6a.6.6 0 0 0 .9.5l7.4-4.8a.6.6 0 0 0 0-1L5.9 2.7a.6.6 0 0 0-.9.5z" fill="currentColor"/></symbol>
+ <symbol id="i-cart" viewBox="0 0 16 16"><path d="M3.5 1.5h7l2 2v10a1 1 0 0 1-1 1h-8a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="5" y="6" width="6" height="5" rx=".6" fill="currentColor"/><path d="M5 3.5h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></symbol>
+ <symbol id="i-full" viewBox="0 0 16 16"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<main class="console is-booting" id="console" aria-label="Tweetboy handheld">
+ <div class="shell">
+  <button id="keyboard-shortcut" class="keyboard-shortcut" type="button" aria-label="Keyboard controls" title="Keyboard controls">⌨</button>
+  <button id="cartridge-slot" class="cartridge-slot" type="button" aria-label="Switch cartridges"><span class="slot-ridges" aria-hidden="true"></span><span id="slot-label">INSERT ROM</span><span class="slot-eject" aria-hidden="true">↥</span></button>
+  <section class="face">
+   <div class="stage">
+    <div class="bezel">
+     <span id="keys-hint" hidden></span><span id="model" hidden></span>
+     <div class="screen" id="screen">
+      <div id="display" class="display"></div>
+      <div class="boot" id="boot">
+       <div class="boot-mark">tweetboy</div>
+       <div class="boot-info">
+        <div class="boot-cart" id="boot-cart"></div>
+        <div class="boot-meta">
+         <b class="boot-title" id="boot-title">Power on</b>
+         <div class="boot-meter"><i id="boot-bar"></i></div>
+         <span class="boot-status" id="boot-status" role="status" aria-live="polite">Reading cartridge</span>
+        </div>
+       </div>
+       <button class="boot-action" id="boot-action" type="button" hidden>Choose a cartridge</button>
+      </div>
+      <button class="veil" id="veil" type="button" hidden>
+       <span class="veil-badge"><svg><use href="#i-play"/></svg></span>
+       <b id="veil-title">Paused</b><small id="veil-hint">Tap to resume</small>
+      </button>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <div class="deck" id="deck">
+   <span class="skin-brand" aria-hidden="true">TWEETBOY</span>
+   <button class="shoulder shoulder-l" type="button" data-zone="button" data-control="L" aria-label="L shoulder"></button>
+   <button class="shoulder shoulder-r" type="button" data-zone="button" data-control="R" aria-label="R shoulder"></button>
+   <div class="dpad" id="dpad" data-zone="dpad" role="group" aria-label="Directional pad">
+    <div class="cross"></div>
+    <button class="arm up" type="button" data-control="Up" aria-label="Up"></button>
+    <button class="arm left" type="button" data-control="Left" aria-label="Left"></button>
+    <button class="arm right" type="button" data-control="Right" aria-label="Right"></button>
+    <button class="arm down" type="button" data-control="Down" aria-label="Down"></button>
+   </div>
+   <div class="ab" id="ab" data-zone="ab" role="group" aria-label="A and B buttons">
+    <button class="face-btn button-b" type="button" data-control="B" aria-label="B"></button>
+    <button class="face-btn button-a" type="button" data-control="A" aria-label="A"></button>
+   </div>
+   <button class="small-control select" type="button" data-zone="button" data-control="Select" aria-label="Select"></button>
+   <button class="small-control start" type="button" data-zone="button" data-control="Start" aria-label="Start"></button>
+   <button class="small-control menu-control" id="library" type="button" aria-label="Game menu" aria-haspopup="dialog"></button>
+  </div>
+ </div>
+</main>
+
+<dialog id="menu" aria-labelledby="menu-title">
+ <div class="sheet">
+  <header class="sheet-head"><h2 id="menu-title">tweetboy</h2><button class="key" id="close-menu" type="button" aria-label="Close">✕</button></header>
+  <nav class="menu-tabs" role="tablist" aria-label="Player settings">
+   <button id="tab-game" type="button" role="tab" aria-controls="pane-game" aria-selected="true" data-pane="game">Game</button>
+   <button id="tab-controls" type="button" role="tab" aria-controls="pane-controls" aria-selected="false" data-pane="controls" tabindex="-1">Settings</button>
+  </nav>
+  <div class="menu-content">
+   <section id="pane-game" role="tabpanel" aria-labelledby="tab-game">
+    <div class="playing-game"><div id="menu-game-art"></div><div><small>NOW PLAYING</small><b id="menu-game-name">Pokémon FireRed</b></div></div>
+    <div class="keys" role="toolbar" aria-label="Console">
+     <button class="key sound" id="sound" type="button" aria-pressed="false" aria-label="Turn sound on"><svg><use href="#i-sound-off"/></svg><span>Sound off</span></button>
+     <button class="key" id="pause" type="button" aria-label="Pause" disabled><svg><use href="#i-pause"/></svg><span>Resume</span></button>
+     <button class="key" id="fullscreen" type="button" aria-label="Fullscreen" hidden><svg><use href="#i-full"/></svg><span>Screen</span></button>
+    </div>
+
+  <div class="actions">
+   <button class="act" id="reset" type="button" disabled>Reset</button>
+  </div>
+  <p class="fine" id="save-note">Progress saves automatically. Pick up where you left off.</p>
+  <h3 class="library-label">Cartridges</h3>
+  <div id="cartridge-library">
+  <div class="shelf" id="shelf">
+   <button class="slot insert" id="insert" type="button"><span class="cart cart-blank"><span class="cart-plus">+</span></span><b>Your ROM</b><small>.gb .gbc .gba</small></button>
+  </div>
+  <input type="file" id="rom" accept=".gb,.gbc,.gba" hidden>
+  <p class="fine">Imported ROMs and saves stay in this browser. Nothing is uploaded.</p></div>
+
+  <details class="credits"><summary>Games &amp; credits</summary>
+   <p><a href="https://github.com/EmulatorJS/EmulatorJS/tree/v4.2.3" target="_blank" rel="noopener">EmulatorJS 4.2.3</a> loads from the official CDN. Emulator code and cores are not included in this repository. <a href="https://github.com/EmulatorJS/EmulatorJS/blob/v4.2.3/LICENSE">License</a></p>
+   <p>Controller artwork adapted from <a href="https://github.com/rileytestut/GBADeltaCore">Delta by Riley Testut</a> · <a href="licenses/delta.txt">AGPL-3.0</a> · <a href="licenses/tweetboy-source.zip">Adapted source</a></p>
+   <p>No games are included. Import your own cartridge. ROMs and saves stay in this browser.</p>
+  </details>
+   </section>
+   <section id="pane-controls" role="tabpanel" aria-labelledby="tab-controls" hidden>
+    <p id="controls-intro" hidden>Your keyboard controls. Click a button to change its key.</p>
+    <fieldset class="color-settings"><legend>Shell color</legend><div class="color-options">
+     <label style="--swatch:#8571db"><input type="radio" name="shell-color" value="violet" checked><span></span>Violet</label>
+     <label style="--swatch:#52b781"><input type="radio" name="shell-color" value="mint"><span></span>Mint</label>
+     <label style="--swatch:#58a6de"><input type="radio" name="shell-color" value="blue"><span></span>Blue</label>
+     <label style="--swatch:#dc78b4"><input type="radio" name="shell-color" value="rose"><span></span>Rose</label>
+     <label style="--swatch:#d4a550"><input type="radio" name="shell-color" value="gold"><span></span>Gold</label>
+     <label style="--swatch:#999"><input type="radio" name="shell-color" value="slate"><span></span>Slate</label>
+    </div></fieldset>
+    <div class="speed-settings"><label for="game-speed">Game speed</label><select id="game-speed"><option value="1">1× · Normal</option><option value="1.5">1.5×</option><option value="2">2×</option><option value="3">3×</option><option value="4">4×</option></select></div>
+    <h3 class="settings-label">Keyboard controls</h3>
+    <p class="control-instruction">Click a button. Press a key.</p>
+    <div id="key-bindings" class="controller-map" aria-label="Keyboard mapping controller"></div>
+    <div class="mapping-footer"><button id="map-fast" type="button" aria-label="Map Fast key">Fast-forward <kbd>Shift</kbd></button><button id="reset-keys" class="reset-keys" type="button">Reset keys</button></div>
+    <p id="key-status" class="fine" role="status" aria-live="polite">M · sound &nbsp; P · pause &nbsp; Esc · menu</p>
+    <button id="start-playing" class="primary" type="button" hidden>Let’s play</button>
+   </section>
+
+  </div>
+ </div>
+</dialog>
+<script src="app.js?v=33"></script>
+</body>
+</html>

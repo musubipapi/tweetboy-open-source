@@ -1,0 +1,8 @@
+.git/
+work/
+__pycache__/
+
+.env
+.env.*
+*.pem
+*.key

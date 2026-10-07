@@ -1,0 +1,12 @@
+{
+  "name": "tweetboy",
+  "version": "1.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "description": "A local Game Boy, Game Boy Color and Game Boy Advance browser player",
+  "scripts": {
+    "start": "python3 server.py",
+    "dev": "npm start",
+    "test": "python3 -m unittest discover -s tests"
+  }
+}

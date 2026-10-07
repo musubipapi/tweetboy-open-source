@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tweetboy · feed embed preview</title>
+<style>
+ :root{--bg:#000;--fg:#e7e9ea;--dim:#71767b;--line:#2f3336;--chip:#16181c;color-scheme:dark;font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+ .light{--bg:#fff;--fg:#0f1419;--dim:#536471;--line:#eff3f4;--chip:#f7f9f9;color-scheme:light}
+ body{margin:0;background:var(--bg);color:var(--fg)}
+ .bar{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 14px;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);font-size:13px}
+ .bar b{margin-right:6px}
+ .bar button,.bar select,.bar label{font:inherit;color:var(--fg);background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+ .bar button[aria-pressed="true"]{background:#7556e8;border-color:#7556e8;color:#fff}
+ .bar .size{color:var(--dim);margin-left:auto;font-variant-numeric:tabular-nums}
+ main{width:min(600px,100%);margin:0 auto;border-inline:1px solid var(--line);min-height:100vh}
+ .wide main{width:min(940px,100%)}
+ .composer{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
+ .composer input{flex:1;font:inherit;font-size:18px;background:none;border:0;color:var(--fg);outline:none}
+ article{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line)}
+ .avatar{width:40px;height:40px;border-radius:50%;flex:none;background:linear-gradient(135deg,#7556e8,#e2452a)}
+ .avatar.alt{background:linear-gradient(135deg,#1d9bf0,#7fd08a)}
+ .body{min-width:0;flex:1}
+ .who{color:var(--dim)}.who b{color:var(--fg)}
+ p{margin:2px 0 10px}
+ .card{border:1px solid var(--line);border-radius:16px;overflow:hidden;width:var(--w);height:var(--h);max-width:100%}
+ .card iframe{display:block;width:100%;height:100%;border:0}
+ .actions{display:flex;justify-content:space-between;max-width:420px;margin-top:10px;color:var(--dim);font-size:13px}
+ .filler{height:120px;border-radius:16px;background:var(--chip);border:1px solid var(--line)}
+ .note{padding:14px 16px;color:var(--dim);font-size:13px;border-bottom:1px solid var(--line)}
+ code{font:12px ui-monospace,Menlo,monospace}
+</style>
+</head>
+<body>
+<div class="bar">
+ <b>Embed preview</b>
+ <button data-size="600x600" aria-pressed="true">Square 600</button>
+ <button data-size="480x480">Square 480</button>
+ <button data-size="350x500">Narrow 350×500</button>
+ <button data-size="390x844">Phone 390×844</button>
+ <button data-size="844x390">Landscape 844×390</button>
+ <select id="game" aria-label="Cartridge"><option value="">Your local library</option></select>
+ <label><input type="checkbox" id="embed" checked> ?embed=1</label>
+ <button id="theme">Light</button>
+ <span class="size" id="size"></span>
+</div>
+<main>
+ <div class="composer"><span class="avatar alt"></span><input placeholder="What’s happening? (type here: arrow keys must not reach the game)" aria-label="Compose"></div>
+ <p class="note">Local stand-in for a feed. The card below is a cross-document iframe of <code id="src"></code>. Scroll it out of view to check that it pauses, click into it to give it the keyboard, click the composer to take the keyboard back.</p>
+ <article><span class="avatar alt"></span><div class="body"><div class="who"><b>Someone</b> @someone · 2h</div><p>Unrelated post above the card so the embed starts lower in the feed.</p><div class="filler"></div></div></article>
+ <article><span class="avatar"></span><div class="body">
+  <div class="who"><b>Tweetboy</b> @tweetboy · 1m</div>
+  <p>Pocket handheld, right in the timeline. Tap the buttons to play — sound is off until you turn it on. 🎮</p>
+  <div class="card" id="card"><iframe id="frame" title="Tweetboy game" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
+  <div class="actions"><span>💬 12</span><span>🔁 48</span><span>♥ 310</span><span>📊 9K</span></div>
+ </div></article>
+ <article><span class="avatar alt"></span><div class="body"><div class="who"><b>Another</b> @another · 3h</div><p>Scroll past to confirm the card pauses when off screen and wakes on return.</p><div class="filler"></div></div></article>
+ <article><span class="avatar alt"></span><div class="body"><div class="who"><b>Filler</b> @filler · 5h</div><p>More feed.</p><div class="filler" style="height:900px"></div></div></article>
+</main>
+<script>
+ const frame=document.querySelector('#frame'),card=document.querySelector('#card');let size='600x600';
+ function apply(){
+  const [w,h]=size.split('x').map(Number),params=new URLSearchParams();
+  if(document.querySelector('#embed').checked)params.set('embed','1');
+  const game=document.querySelector('#game').value;if(game)params.set('game',game);
+  const query=params.toString(),src='/play/'+(game||'library')+(query?'?'+query:'');
+  card.style.setProperty('--w',w+'px');card.style.setProperty('--h',h+'px');document.body.classList.toggle('wide',w>560);
+  document.querySelector('#size').textContent=w+'×'+h;document.querySelector('#src').textContent=src;
+  if(frame.getAttribute('src')!==src)frame.src=src;
+ }
+ document.querySelectorAll('[data-size]').forEach(b=>b.onclick=()=>{size=b.dataset.size;document.querySelectorAll('[data-size]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));apply();});
+ document.querySelector('#game').onchange=apply;document.querySelector('#embed').onchange=apply;
+ document.querySelector('#theme').onclick=e=>{const light=document.documentElement.classList.toggle('light');e.target.textContent=light?'Dark':'Light';};
+ apply();
+</script>
+</body>
+</html>

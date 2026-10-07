@@ -1,0 +1,18 @@
+.DS_Store
+node_modules/
+*.log
+
+work/
+
+__pycache__/
+
+
+# Credentials and local cartridges never belong in source control.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.gb
+*.gbc
+*.gba

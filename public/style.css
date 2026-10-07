@@ -1,0 +1,121 @@
+ :root{--ink:#eae7f7;--ink-soft:#a29bb8;--violet:#8580ff;--violet-deep:#c6c2ff;--lilac:#a59fd0;--mono:ui-monospace,Menlo,monospace;--mark:system-ui,sans-serif;color-scheme:dark;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}body{display:grid;place-items:center;background:#000;color:var(--ink)}button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:disabled{opacity:.4;cursor:default}[hidden]{display:none!important}:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.console{--ar:1.111111;container:console/size;position:relative;width:min(100vw,62.5dvh);height:100dvh;touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;background:#000}
+.console.gba{--ar:1.5}.console.gba.rotated{--ar:.666667}
+.shell{height:100%;display:flex;flex-direction:column}.face{flex:1;min-height:0;padding-top:env(safe-area-inset-top);background:#000}.stage{width:100%;height:100%;container:stage/size;display:grid;place-items:center}.bezel{display:contents}
+.screen{position:relative;width:min(100cqw,100cqh * var(--ar));aspect-ratio:var(--ar);container:lcd/size;background:#000;overflow:hidden}.display,.display iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}.display iframe{pointer-events:none;background:#000}
+.deck{position:relative;flex:none;width:100%;aspect-ratio:320/274;background:url(assets/delta/iphone_edgetoedge_portrait.webp?v=9) center/100% 100% no-repeat;container:controls/inline-size;margin-bottom:env(safe-area-inset-bottom);background-color:#5144bf}
+.skin-brand{position:absolute;top:.5%;left:35%;width:30%;text-align:center;font:700 2.4cqw/1.6 system-ui;letter-spacing:.08em;color:#dddce9;pointer-events:none}
+[data-zone]{touch-action:none}[data-zone]::before,.menu-control::before{content:"";position:absolute;inset:-8px}
+.deck button{border:0;padding:0;background-color:transparent;background-size:100% 100%;background-repeat:no-repeat;transition:filter 65ms,transform 65ms}
+.deck button.pressed{filter:brightness(.78);transform:scale(.96)}
+.shoulder{position:absolute;top:.73%;width:33.75%;height:10.95%;background-image:url(assets/delta/iphone_l.webp)}.shoulder-l{left:0}.shoulder-r{right:0;background-image:url(assets/delta/iphone_r.webp)}
+.dpad{position:absolute;left:4.6875%;top:22.263%;width:40%;aspect-ratio:1;perspective:400px}.cross{position:absolute;inset:0;background:url(assets/delta/iphone_dpad.webp) center/contain no-repeat;transform:rotateX(var(--ty,0deg)) rotateY(var(--tx,0deg));transition:transform 60ms}
+.arm{position:absolute;width:34%;height:34%;background:none!important}.arm.up{top:0;left:33%}.arm.down{bottom:0;left:33%}.arm.left{left:0;top:33%}.arm.right{right:0;top:33%}
+.ab{position:absolute;left:56.25%;top:27.007%;width:39.0625%;height:37.226%}.face-btn{position:absolute;width:44.8%;aspect-ratio:1;border-radius:50%}.button-a{right:0;top:0;background-image:url(assets/delta/iphone_a.webp)}.button-b{left:0;bottom:0;background-image:url(assets/delta/iphone_b.webp)}
+.small-control{position:absolute;top:78.467%;width:5.3125%;aspect-ratio:1;background-image:url(assets/delta/iphone_start_select.webp)}.select{left:39.0625%}.start{left:56.5625%}.menu-control{left:5.3125%;background-image:url(assets/delta/iphone_menu.webp)}
+.boot{position:absolute;inset:0;z-index:2;display:grid;place-content:center;justify-items:center;gap:20px;background:#08070d;color:#eee;transition:opacity .25s,visibility .25s}.boot.done{opacity:0;visibility:hidden}.boot-mark{display:none}.boot-info{display:flex;align-items:center;gap:16px}.boot-cart{width:44px}.boot-meta{display:grid;gap:9px;max-width:180px}.boot-title{font:600 12px/1.2 system-ui}.boot-meter{height:3px;background:#292536;border-radius:2px;overflow:hidden}.boot-meter i{display:block;height:100%;width:var(--p,4%);background:#948dff;transition:width .2s}.boot-status{font:10px/1.3 system-ui;color:#aaa}.boot-action{border:0;border-radius:8px;padding:10px;background:#5144bf;color:#fff}.boot.error .boot-status{color:#ffa3a3}
+.veil{position:absolute;inset:0;z-index:3;border:0;display:grid;place-content:center;justify-items:center;gap:12px;background:#000a;backdrop-filter:blur(2px);color:#fff}.veil-badge{width:40px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:#ffffff22}.veil-badge svg{width:20px;height:20px}.veil b{font:600 16px system-ui}.veil small{font:12px system-ui;color:#ccc}.toast{position:absolute;z-index:4;left:50%;bottom:10px;transform:translateX(-50%);max-width:92%;padding:8px 12px;border-radius:20px;background:#171322e6;color:#fff;font:11px system-ui;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s}.toast.show{opacity:1}
+.keys{display:flex;gap:8px;margin-top:14px}.key{border:0;border-radius:8px;min-height:36px;min-width:36px;padding:8px;background:#312b43;display:inline-flex;align-items:center;justify-content:center;gap:8px}.key svg{width:18px;height:18px}.key span{font:12px system-ui}
+
+
+/* ---------- Library sheet ---------- */
+dialog{border:0;padding:0;border-radius:20px;width:min(460px,calc(100vw - 20px));max-height:calc(100vh - 20px);max-height:calc(100dvh - 20px);overflow:auto;
+ background:#201b2b;color:var(--ink);box-shadow:0 30px 90px #0009,inset 0 1px 0 #fff}
+dialog::backdrop{background:#14121ccc;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.sheet{padding:16px 16px 18px}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sheet-head h2{margin:0;font:italic 800 22px/1 var(--mark);letter-spacing:-.02em}
+.sheet-label{margin:16px 0 8px;font:700 8px/1 var(--mono);letter-spacing:.24em;text-transform:uppercase;color:var(--ink-soft)}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:10px}
+.slot{position:relative;display:grid;justify-items:center;gap:4px;padding:8px 4px 9px;border:0;border-radius:12px;background:#0000;text-align:center}
+.slot:hover:not(:disabled){background:#ffffff12}
+.slot b{font:700 10px/1.15 var(--mono);letter-spacing:.02em}
+.slot small{font:600 7px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+.slot .cart{width:58px}
+.slot.current{background:#7556e81c;box-shadow:inset 0 0 0 2px var(--violet)}
+.slot.current::after{content:"In slot";position:absolute;top:4px;right:4px;font:800 6px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;background:var(--violet);color:#fff;padding:3px 4px;border-radius:4px}
+.slot.missing{opacity:.45}
+.fine{margin:8px 0 0;font:500 9px/1.5 var(--mono);color:var(--ink-soft)}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.act{border:0;border-radius:10px;padding:10px 4px;font:700 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);
+ background:#373044;box-shadow:none}
+.act:active:not(:disabled){transform:translateY(1px);box-shadow:0 1px 0 #b9ad94}
+.keymap{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:0;font:500 9px/1.3 var(--mono)}
+.keymap div{display:flex;justify-content:space-between;gap:6px;border-bottom:1px dashed #38326a22;padding:3px 0}
+.keymap dt{font-weight:800}.keymap dd{margin:0;color:var(--ink-soft)}
+.credits{margin-top:14px;font:500 9px/1.6 var(--mono);color:var(--ink-soft)}
+.credits summary{cursor:pointer;font-weight:700;color:var(--ink)}
+.credits a{color:var(--violet-deep)}
+
+/* ---------- Cartridges (CSS + inline SVG art) ---------- */
+.cart{position:relative;display:block;aspect-ratio:10/11;border-radius:4px 4px 7px 7px;
+ background:linear-gradient(170deg,#d7d1de,#b8b1c6);clip-path:polygon(0 0,84% 0,100% 10%,100% 100%,0 100%);filter:drop-shadow(0 2px 0 #0003)}
+.cart::before{content:"";position:absolute;left:8%;right:20%;top:4%;height:9%;background:repeating-linear-gradient(90deg,#0000 0 3px,#00000022 3px 4px)}
+.cart::after{content:"";position:absolute;left:50%;bottom:4%;border:solid transparent;border-width:5px 4px 0;border-top-color:#0003;transform:translateX(-50%)}
+.cart.sys-gba{background:linear-gradient(170deg,#55515f,#3a3743)}
+.cart.sys-gbc{background:linear-gradient(170deg,#9a82f0d9,#6a4fd6d9)}
+.cart-label{position:absolute;left:11%;right:11%;top:19%;bottom:15%;border-radius:3px;overflow:hidden;display:grid;grid-template-rows:1fr auto;box-shadow:inset 0 0 0 1px #0002}
+.cart-label svg{width:100%;height:100%;display:block}
+.cart-label b{display:block;padding:2px 3px;background:#fbf6ea;color:#2a2440;font:800 5px/1.1 var(--mono);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.boot-cart .cart-label b{font-size:clamp(4px,2.4cqh,8px)}
+.art-firered{background:linear-gradient(160deg,#e2452a,#f39a2e)}
+.art-blocks{background:#173c3a}
+.art-bullets{background:#151a3d}
+.art-custom{background:linear-gradient(160deg,#8f88a8,#5f5978)}
+.cart-blank{background:none;filter:none;clip-path:none;border:2px dashed #38326a55;border-radius:6px 14px 8px 8px;display:grid;place-items:center}
+.cart-blank::before,.cart-blank::after{display:none}
+.cart-plus{font:300 26px/1 var(--mono);color:var(--ink-soft)}
+
+
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important}}
+/* One continuous handheld shell around the screen and controller. */
+.console{width:min(calc(100vw - 24px),62.5dvh);height:calc(100dvh - 24px);padding:10px;border-radius:34px;background:linear-gradient(135deg,#393142,#17131d 50%,#29232e);box-shadow:inset 0 1px 2px #ffffff45,inset 0 -2px 2px #000,0 12px 36px #0008;border:1px solid #514759}
+.shell{position:relative;overflow:hidden;border-radius:25px;background:#000}.face{padding-top:36px}.deck{margin-bottom:0;width:88%;align-self:center}.deck::before,.deck::after{content:"";position:absolute;top:0;bottom:0;width:6.82%;background:url(assets/delta/panel-edge.webp) center/100% 100% no-repeat;pointer-events:none}.deck::before{right:100%}.deck::after{left:100%}.skin-brand{color:#eee}.cartridge-slot{position:absolute;z-index:6;top:-1px;left:50%;transform:translateX(-50%);width:48%;height:32px;border:1px solid #514759;border-top:0;border-radius:0 0 12px 12px;background:linear-gradient(#332b3c,#211a2a);box-shadow:0 2px 3px #0008,inset 0 -1px 0 #ffffff0b;color:#c2b7d3;font:700 8px/1 ui-monospace,monospace;letter-spacing:.14em;display:flex;align-items:center;justify-content:space-between;padding:0 9px;gap:8px}.cartridge-slot:hover{border-color:#a098c7;color:#fff}.slot-ridges{width:20px;height:9px;background:repeating-linear-gradient(90deg,#62556d 0 1px,transparent 1px 4px)}.slot-eject{font-size:14px}.primary{display:block;width:100%;border:0;border-radius:9px;background:#8970e0;color:#fff;padding:12px;font:600 13px system-ui;text-decoration:none;cursor:pointer}.key-bindings{display:grid;grid-template-columns:1fr 1fr;gap:7px 14px;margin:12px 0}.key-bindings>div{display:flex;align-items:center;justify-content:space-between;gap:8px;font:12px system-ui}.key-bindings button{min-width:70px;min-height:32px;border:1px solid #534661;border-radius:7px;background:#302739;color:#dcd1ee;font:11px var(--mono);padding:5px}.key-bindings button.listening{border-color:#bba5ff;background:#59417f}.reset-keys{border:0;background:none;color:#bba5ff;font-size:12px;padding:5px 0}.sheet .fine{font:11px/1.5 system-ui}.sheet-label{font-size:10px}.act{font:600 11px system-ui;letter-spacing:0}.sheet-head h2{font-style:normal}.slot b{font:600 11px system-ui}
+@media(max-width:480px){.console{width:min(100vw,62.5dvh);height:100dvh;border-radius:26px;padding:7px}.shell{border-radius:20px}}
+
+
+.keyboard-shortcut{position:absolute;left:10px;top:8px;z-index:6;padding:0;width:28px;height:24px;border:0;border-radius:5px;background:#28202f;color:#bfb2d0;font-size:17px}.keyboard-shortcut:hover{color:#fff;background:#493958}
+.deck{z-index:4}
+.sheet-head{position:sticky;top:-16px;z-index:2;background:#201b2b;margin:-16px -16px 12px;padding:16px;border-bottom:1px solid #ffffff0c}
+.shoulder{width:38.4%}.shoulder-l{left:-6.82%}.shoulder-r{right:-6.82%}
+.deck::before,.deck::after{z-index:-1}
+
+.deck{background:none}.deck::before{left:-6.82%;right:-6.82%;width:auto;background:url(assets/delta/portrait-panel.webp) center/100% 100% no-repeat}.deck::after{display:none}
+/* Compact device menu, with the real controller as its keyboard map. */
+dialog#menu{position:fixed;inset:auto;margin:0;left:var(--menu-x,50%);top:var(--menu-y,50%);transform:translate(-50%,-50%);width:var(--menu-width,340px);max-width:calc(100vw - 26px);max-height:var(--menu-height,calc(100dvh - 40px));overflow:hidden;border-radius:18px;border:1px solid #74608c;background:linear-gradient(160deg,#393044,#211c2c);box-shadow:0 15px 50px #000a,inset 0 1px 0 #ffffff14}
+dialog::backdrop{background:#0009;backdrop-filter:blur(3px)}.sheet{padding:0;display:flex;flex-direction:column;max-height:var(--menu-height,calc(100dvh - 40px))}.sheet-head{position:static;margin:0;padding:12px 14px 7px;background:none;border:0;flex:none}.sheet-head h2{font:700 14px system-ui;letter-spacing:.01em;color:#ded5eb}.sheet-head .key{min-width:28px;min-height:28px;padding:4px;background:#ffffff09;border:1px solid #ffffff12;border-radius:50%;font-size:12px}.menu-tabs{display:flex;gap:3px;margin:0 12px 12px;padding:3px;background:#15101e8c;border-radius:10px;flex:none}.menu-tabs button{flex:1;padding:8px 2px;border:0;border-radius:7px;background:none;color:#aa9bbf;font:600 11px system-ui}.menu-tabs button[aria-selected=true]{background:#776191;color:#fff;box-shadow:0 1px 3px #0004}.menu-content{overflow:auto;min-height:0;padding:0 14px 14px;scrollbar-width:thin;scrollbar-color:#776191 transparent}.playing-game{display:flex;gap:12px;align-items:center;padding:3px 0 14px}.playing-game .cart{width:34px}.playing-game>div:last-child{display:grid;gap:4px}.playing-game small{font:600 8px var(--mono);letter-spacing:.15em;color:#a598b6}.playing-game b{font:600 14px system-ui;color:#eee7f8}.keys{margin:0 0 14px;gap:6px}.keys .key{flex:1;min-height:38px;background:#b7a8c91a;border:1px solid #cdbfe026;box-shadow:inset 0 1px 0 #ffffff08}.keys .key span{font-size:10px}.actions{gap:6px}.act{background:#d4c8e7;color:#302638;border:1px solid #e8e0f2;box-shadow:0 2px 0 #73627f;font-size:10px;border-radius:8px;padding:11px 3px}.fine{font:10px/1.5 system-ui!important;color:#afa2c0}.credits{font:9px/1.5 system-ui;margin-top:15px;padding-top:10px;border-top:1px solid #ffffff0d}.credits summary{color:#a99cba;font:10px system-ui}.credits p{margin:7px 0}
+.control-instruction{margin:0 0 10px;font:11px system-ui;color:#bbb0ca;text-align:center}.controller-map{position:relative;aspect-ratio:320/274;width:100%;background:url(assets/delta/iphone_edgetoedge_portrait.webp) center/100% 100% no-repeat;border-radius:10px;container:map/inline-size;overflow:visible}.map-cross{position:absolute;left:4.6875%;top:22.263%;width:40%;aspect-ratio:1;background:url(assets/delta/iphone_dpad.webp) center/contain no-repeat}.map-button{position:absolute;padding:0;border:0;background-color:transparent;background-size:100% 100%;background-repeat:no-repeat;display:block;cursor:pointer;border-radius:8px}.map-button kbd{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:3px 5px;border:1px solid #f2eafa88;border-radius:4px;background:#30233dd9;color:#f3eafa;font:600 clamp(9px,3cqw,11px)/1 var(--mono);white-space:nowrap;box-shadow:0 1px 2px #0004}.map-a kbd,.map-b kbd{left:80%;top:85%}.map-l kbd,.map-r kbd{left:75%;top:75%}.map-select kbd,.map-start kbd{top:110%}.map-button:hover kbd,.map-button.listening kbd{background:#7b5bac;border-color:#fff}.mapping-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;gap:8px}.mapping-footer>button{border:0;background:none;color:#cfc2dd;font:10px system-ui;padding:4px 0}.mapping-footer kbd{margin-left:5px;padding:3px 5px;border:1px solid #83728f;border-radius:4px;background:#231b30;color:#e9e0f3;font:10px var(--mono)}#key-status{min-height:16px;margin-bottom:0;text-align:center}.map-menu{filter:grayscale(1)}.primary{background:#c2b0d7;color:#2c2236;font:700 11px system-ui;border:1px solid #e1d2ef;padding:10px;border-radius:8px}.slot b{font-size:10px}.slot small{font-size:7px}.shelf{gap:6px;grid-template-columns:repeat(3,1fr)}.slot .cart{width:48px}
+.menu-control{filter:grayscale(1)}
+.controller-map{max-width:max(160px,calc((var(--menu-height) - 180px) * 1.167));margin-inline:auto}.map-menu-art{position:absolute;left:5.3125%;top:78.467%;width:5.3125%;aspect-ratio:1;background:url(assets/delta/iphone_menu.webp) center/contain no-repeat;filter:grayscale(1)}.map-button::before{content:"";position:absolute;inset:-5px}.map-button:focus-visible{outline:2px solid #eee;outline-offset:3px}
+
+#controls-intro{margin:0 0 12px;text-align:center;font:12px/1.5 system-ui;color:#cbbdda}#start-playing{margin-top:12px}.is-onboarding .controller-map{max-width:max(160px,calc((var(--menu-height) - 225px) * 1.167))}
+
+.library-label{margin:17px 0 7px;font:600 10px system-ui;color:#bdb0cd;letter-spacing:.03em}#cartridge-library .fine{margin-top:7px}
+
+/* Keyboard hints sit on the real controls only while play is paused. */
+.paused-key{display:none;pointer-events:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:4px 7px;border:1px solid #f0e6fa99;border-radius:5px;background:#392743e8;color:#f9f2ff;box-shadow:0 2px 3px #0005;font:600 clamp(10px,3cqw,14px)/1 var(--mono);white-space:nowrap;z-index:3}.show-control-keys .paused-key{display:block}.face-btn .paused-key{left:75%;top:80%}.shoulder .paused-key{left:75%;top:70%}.small-control .paused-key{top:50%;padding:3px 5px}
+
+/* Keep the portrait handheld skin at every viewport and iframe size. */
+
+/* Saving is automatic; the remaining action restarts the cartridge. */
+.actions{grid-template-columns:1fr}
+
+/* Tint the plastic artwork while keeping the actual buttons neutral. */
+.deck::before{filter:var(--skin-filter,none)}
+.controller-map{background:none;isolation:isolate}
+.controller-map::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:10px;background:url(assets/delta/iphone_edgetoedge_portrait.webp) center/100% 100% no-repeat;filter:var(--skin-filter,none)}
+.color-settings{margin:0 0 16px;padding:0;border:0;min-width:0}
+.color-settings legend,.settings-label{margin:0 0 9px;padding:0;color:#cfc2dd;font:600 11px system-ui}
+.color-options{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.color-options label{position:relative;display:grid;justify-items:center;gap:6px;cursor:pointer;font:9px system-ui;color:#bdb0cd;padding:5px 0}
+.color-options input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.color-options span{width:24px;height:24px;background:var(--swatch);border-radius:50%;box-shadow:inset 0 1px 2px #fff6,0 2px 3px #0005;border:2px solid transparent;pointer-events:none}
+.color-options input:checked+span{outline:2px solid #e9def5;outline-offset:2px}
+.color-options input:focus-visible+span{outline:2px solid #fff;outline-offset:3px}
+.controller-map{max-width:max(140px,calc((var(--menu-height) - 280px) * 1.167))}
+.is-onboarding .controller-map{max-width:max(140px,calc((var(--menu-height) - 325px) * 1.167))}
+
+
+
+.speed-settings{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:14px 0;color:inherit;font-size:13px;font-weight:600}.speed-settings select{font:inherit;color:inherit;background:#ffffff12;border:1px solid #ffffff25;border-radius:8px;padding:8px 12px}.speed-settings select option{background:#292735;color:#fff}
