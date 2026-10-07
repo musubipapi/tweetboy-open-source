@@ -14,7 +14,11 @@ interface EmulatorGameManager {
 }
 interface Emulator {
   gameManager: EmulatorGameManager;
-  Module: { AL?: { currentCtx?: { audioCtx?: AudioContext; sources?: { gain?: GainNode }[] } } };
+  Module: {
+    AL?: {
+      currentCtx?: { audioCtx?: AudioContext; sources?: { gain?: GainNode }[] };
+    };
+  };
   pause(): void;
   play(): void;
   setVolume(volume: number): void;
@@ -46,4 +50,6 @@ interface Document {
   webkitFullscreenElement?: Element;
   webkitExitFullscreen?: () => Promise<void>;
 }
-interface HTMLElement { webkitRequestFullscreen?: () => Promise<void> }
+interface HTMLElement {
+  webkitRequestFullscreen?: () => Promise<void>;
+}

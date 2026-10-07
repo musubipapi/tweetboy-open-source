@@ -7,11 +7,14 @@
   "scripts": {
     "start": "bun run build && python3 server.py",
     "dev": "bun run start",
-    "test": "bun run typecheck && python3 -m unittest discover -s tests",
+    "test": "bun run typecheck && bun run format:check && python3 -m unittest discover -s tests",
     "build": "bun run --bun tsc",
-    "typecheck": "bun run --bun tsc --noEmit"
+    "typecheck": "bun run --bun tsc --noEmit",
+    "format": "bun run --bun prettier --write \"src/**/*.ts\"",
+    "format:check": "bun run --bun prettier --check \"src/**/*.ts\""
   },
   "devDependencies": {
+    "prettier": "3.9.9",
     "typescript": "5.9.3"
   },
   "packageManager": "bun@1.3.5"

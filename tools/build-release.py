@@ -15,9 +15,9 @@ def build():
     subprocess.run(['bun', 'run', 'build'], cwd=ROOT, check=True)
     files = [ROOT / name for name in (
         'README.md', 'THIRD_PARTY.md', 'LICENSE', 'package.json', 'bun.lock', 'tsconfig.json', 'server.py', 'Dockerfile',
-        '.gitignore', '.gitattributes', '.dockerignore', '.railwayignore',
+        '.gitignore', '.gitattributes', '.dockerignore', '.railwayignore', '.prettierrc.json',
     )]
-    for pattern in ('*.html', '*.js', '*.css', '*.svg', 'preview.png'):
+    for pattern in ('*.html', '*.css', '*.svg', 'preview.png'):
         files.extend(PUBLIC.glob(pattern))
     files.extend((PUBLIC / 'assets/delta').glob('*'))
     files.extend((ROOT / 'tools/delta-skin').glob('*'))
@@ -32,8 +32,9 @@ def build():
                 archive.write(path, str(path.relative_to(ROOT)))
 
     RELEASE.mkdir(parents=True, exist_ok=True)
-    for name in ('Dockerfile', 'server.py', '.dockerignore', '.railwayignore'):
+    for name in ('Dockerfile', 'server.py', 'package.json', 'bun.lock', 'tsconfig.json', '.prettierrc.json', '.dockerignore', '.railwayignore'):
         shutil.copy2(ROOT / name, RELEASE / name)
+    shutil.copytree(ROOT / 'src', RELEASE / 'src', dirs_exist_ok=True)
     if (RELEASE / 'public').exists():
         shutil.rmtree(RELEASE / 'public')
     shutil.copytree(PUBLIC, RELEASE / 'public', ignore=shutil.ignore_patterns(

@@ -16,3 +16,8 @@ __pycache__/
 *.gb
 *.gbc
 *.gba
+
+# Browser files are generated during build.
+/public/app.js
+/public/player.js
+/public/types.js

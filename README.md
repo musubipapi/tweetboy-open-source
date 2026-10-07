@@ -15,12 +15,13 @@ The Python server supplies files and generates Player Card metadata. The browser
 | `public/index.html` | Console shell and menus |
 | `public/player.html` | Page for the emulator frame |
 | `public/style.css` | Console and menu styles |
-| `public/app.js`, `public/player.js`, `public/types.js` | JavaScript generated from TypeScript |
+| `public/app.js`, `public/player.js`, `public/types.js` | Local build output; excluded from Git |
 | `public/assets/delta/` | Controller images |
 | `public/preview.png`, `public/preview.svg` | Player Card artwork |
 | `public/embed-preview.html` | Preview of the player at different sizes |
 | `server.py` | HTTP server, card metadata, and frame policy |
 | `tsconfig.json` | TypeScript compiler settings |
+| `.prettierrc.json` | TypeScript formatting rules |
 | `bun.lock` | Exact build dependency versions |
 | `docs/architecture.png` | Architecture diagram exported from tldraw |
 | `docs/architecture.tldraw.json` | Editable tldraw document snapshot |
@@ -120,7 +121,7 @@ bun run start
 
 Open [localhost:8765](http://127.0.0.1:8765/). `bun run start` compiles TypeScript and starts the Python server.
 
-Edit files in `src/`. Run `bun run build` to generate JavaScript in `public/`. Do not edit the generated JavaScript directly. Generated files are committed so the Docker image can run without Bun.
+Edit files in `src/`. Run `bun run build` to generate JavaScript in `public/`. Do not edit the generated JavaScript directly. Generated files are ignored by Git. A fresh checkout creates them during the build.
 
 The compiler does not generate output when type checks fail. Full strict mode is not enabled.
 
@@ -139,7 +140,7 @@ The shell or hosting environment supplies these variables. The server does not l
 
 `PUBLIC_URL` must be an HTTPS origin without a path, query, fragment, or credentials. HTTP is permitted only for localhost. If you change `PORT`, set `PUBLIC_URL` to match.
 
-The server blocks dotfiles, directory listings, and links outside `public/`. The Dockerfile uses Python 3.12 and serves the generated files. There is no offline cache.
+The server blocks dotfiles, directory listings, and links outside `public/`. The Docker build compiles TypeScript in a Bun 1.3.5 stage. The runtime image uses Python 3.12 and serves the generated files. There is no offline cache.
 
 ## Checks and release files
 
@@ -148,8 +149,10 @@ bun run test
 python3 tools/build-release.py
 ```
 
-`bun run test` checks TypeScript and runs seven HTTP integration tests. The tests use a temporary directory and require no ROMs or external services.
+`bun run test` checks TypeScript types, formatting, and seven HTTP integration tests. The tests use a temporary directory and require no ROMs or external services.
 
-The release builder compiles TypeScript, updates `public/licenses/tweetboy-source.zip`, and creates `work/release/`. The source archive includes the TypeScript files and build configuration. The release directory contains the server, Docker configuration, and browser files. It excludes ROMs and common credential files.
+The release builder compiles TypeScript, updates `public/licenses/tweetboy-source.zip`, and creates `work/release/`. The source archive includes the TypeScript files and build configuration. The release directory contains the server, TypeScript source, build configuration, Docker configuration, and browser files. It excludes ROMs and common credential files.
+
+Run `bun run format` to format the TypeScript files. Run `bun run format:check` to check formatting without changing files.
 
 For browser checks, use `/embed-preview.html`. Check cartridge import, input, sound, pause, speed, saved progress, and saved settings.

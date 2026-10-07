@@ -8,3 +8,10 @@ __pycache__
 *.key
 
 node_modules/
+
+*.gb
+*.gbc
+*.gba
+public/app.js
+public/player.js
+public/types.js
