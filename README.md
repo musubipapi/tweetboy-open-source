@@ -1,3 +1,5 @@
+![Tweetboy GBA handheld](docs/tweetboy-gba-hero.png)
+
 # Tweetboy
 
 Tweetboy plays Game Boy, Game Boy Color, and Game Boy Advance cartridges in a browser. The interface supports touch controls and a keyboard.
